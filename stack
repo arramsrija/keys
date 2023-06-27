@@ -1,0 +1,22 @@
+import java.util.Stack;
+
+public class StackExample {
+    public static void main(String[] args) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println("Stack: " + stack);
+
+        int removedElement = stack.pop();
+        System.out.println("Removed Element: " + removedElement);
+        System.out.println("Stack after pop operation: " + stack);
+
+        int topElement = stack.peek();
+        System.out.println("Top Element: " + topElement);
+        System.out.println("Stack after peek operation: " + stack);
+
+        stack.push(4);
+        System.out.println("Stack after push operation: " + stack);
+    }
+}
