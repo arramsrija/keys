@@ -1,0 +1,63 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Subsequence {
+    
+    public static List<Integer> findLongestIncreasingSubsequence(List<Integer> numbers) {
+        int n = numbers.size();
+        int[] lengths = new int[n];
+        int[] previousIndices = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            lengths[i] = 1;
+            previousIndices[i] = -1;
+
+            for (int j = 0; j < i; j++) {
+                if (numbers.get(i) > numbers.get(j) && lengths[j] + 1 > lengths[i]) {
+                    lengths[i] = lengths[j] + 1;
+                    previousIndices[i] = j;
+                }
+            }
+        }
+
+        int maxLengthIndex = 0;
+        for (int i = 1; i < n; i++) {
+            if (lengths[i] > lengths[maxLengthIndex]) {
+                maxLengthIndex = i;
+            }
+        }
+
+        List<Integer> longestSubsequence = new ArrayList<>();
+        while (maxLengthIndex != -1) {
+            longestSubsequence.add(numbers.get(maxLengthIndex));
+            maxLengthIndex = previousIndices[maxLengthIndex];
+        }
+
+        // Reverse the list to get the correct order
+        int subsequenceLength = longestSubsequence.size();
+        for (int i = 0; i < subsequenceLength / 2; i++) {
+            int temp = longestSubsequence.get(i);
+            longestSubsequence.set(i, longestSubsequence.get(subsequenceLength - i - 1));
+            longestSubsequence.set(subsequenceLength - i - 1, temp);
+        }
+
+        return longestSubsequence;
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(10);
+        numbers.add(22);
+        numbers.add(9);
+        numbers.add(33);
+        numbers.add(21);
+        numbers.add(50);
+        numbers.add(41);
+        numbers.add(60);
+        numbers.add(80);
+        
+        List<Integer> longestSubsequence = findLongestIncreasingSubsequence(numbers);
+        System.out.println("Longest increasing subsequence: " + longestSubsequence);
+    }
+}
