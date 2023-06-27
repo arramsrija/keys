@@ -1,0 +1,55 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+public class LongestIncreasingSubsequence {
+public static List<Integer>findLongestIncreasingSubsequence(List<Integer> numbers) {
+    int n = numbers.size();
+    int[] lengths = new int[n];
+    int[] previousIndices = new int[n];
+
+    Arrays.fill(lengths, 1);
+    Arrays.fill(previousIndices, -1);
+
+    int maxLength = 1;
+    int maxIndex = 0;
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+            if (numbers.get(i) > numbers.get(j) && lengths[j] + 1 > lengths[i]) {
+                lengths[i] = lengths[j] + 1;
+                previousIndices[i] = j;
+            }
+        }
+        if (lengths[i] > maxLength) {
+            maxLength = lengths[i];
+            maxIndex = i;
+        }
+    }
+
+    List<Integer> longestSubsequence = new ArrayList<>();
+    while (maxIndex != -1) {
+        longestSubsequence.add(numbers.get(maxIndex));
+        maxIndex = previousIndices[maxIndex];
+    }
+
+    // Reverse the subsequence as it was built in reverse order
+    int subsequenceLength = longestSubsequence.size();
+    for (int i = 0; i < subsequenceLength / 2; i++) {
+        int temp = longestSubsequence.get(i);
+        longestSubsequence.set(i, longestSubsequence.get(subsequenceLength - i - 1));
+        longestSubsequence.set(subsequenceLength - i - 1, temp);
+    }
+
+    return longestSubsequence;
+}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+	        List<Integer> numbers = Arrays.asList(4, 2, 3, 80, 30);
+	        List<Integer> longestSubsequence =  findLongestIncreasingSubsequence(numbers);
+
+	        System.out.println("Longest Increasing Subsequence: " + longestSubsequence);
+	    }
+	}
+
+
