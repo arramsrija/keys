@@ -1,28 +1,21 @@
-public static int[] 
-longestIncreasingSubsequence(int[] nums) {
-    int n = nums.length;
-    int[] dp = new int[n];
-    Arrays.fill(dp, 1);
-    int maxLen = 1;
-    int maxIndex = 0;
-    for (int i = 1; i < n; i++) {
-        for (int j = 0; j < i; j++) {
-            if (nums[i] > nums[j]) {
-                dp[i] = Math.max(dp[i], dp[j] + 1);
+import java.util.ArrayList;
+import java.util.List;
+
+public class LongestIncreasingSubsequence {
+    public static void main(String[] args) {
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        List<Integer> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        for (int i = 0; i < numbers.length; i++) {
+            temp.add(numbers[i]);
+            if (i + 1 == numbers.length || numbers[i] > numbers[i + 1]) {
+                if (temp.size() >= result.size()) {
+                    result.clear();
+                    result.addAll(temp);
+                }
+                temp.clear();
             }
         }
-        if (dp[i] > maxLen) {
-            maxLen = dp[i];
-            maxIndex = i;
-        }
+        System.out.println(result);
     }
-    int[] res = new int[maxLen];
-    res[--maxLen] = nums[maxIndex];
-    for (int i = maxIndex - 1; i >= 0; i--) {
-        if (nums[i] < nums[maxIndex] && dp[i] == dp[maxIndex] - 1) {
-            res[--maxLen] = nums[i];
-            maxIndex = i;
-        }
-    }
-    return res;
 }
