@@ -1,3 +1,4 @@
+package thread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,7 +10,7 @@ class Camera {
     private double rentalAmount;
     private boolean available;
 
-    public Camera(int id, String name, String model, double rentalAmount) {
+    public Camera(int id, String name, String model, double rentalAmount, String string) {
         this.id = id;
         this.name = name;
         this.model = model;
@@ -43,7 +44,7 @@ class Camera {
 
     @Override
     public String toString() {
-        return "ID: " + id + ", Name: " + name + ", Model: " + model + ", Price per day: $" + rentalAmount +
+        return "ID: " + id + ", Name: " + name + ", Model: " + model + ", Price per day: INR" + rentalAmount +
                 ", Status: " + (available ? "Available" : "Not Available");
     }
 }
@@ -128,63 +129,76 @@ class RentalApplication {
                     camera.setAvailable(false);
                     System.out.println("Camera rented successfully! Amount deducted from wallet: $" + rentalAmount);
                 } else {
-                    System.out.println("Insufficient wallet balance. Cannot rent the camera.");
+                    System.out.println("Insufficient wallet amount. Please deposit more funds.");
                 }
-
                 return;
             }
         }
-
         System.out.println("Invalid camera ID or camera is not available for rent.");
     }
 
     public void displayWalletBalance() {
-        System.out.println("Wallet Balance: $" + userWallet.getBalance());
+        System.out.println("Wallet Balance: INR" + userWallet.getBalance());
     }
 
     public void depositToWallet() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the amount to deposit: $");
+        System.out.print("Enter the amount to deposit: ");
         double amount = scanner.nextDouble();
-        scanner.nextLine(); // Consume the newline character
-
-        System.out.print("Do you want to add $" + amount + " to your wallet? (yes/no): ");
-        String confirmation = scanner.nextLine().toLowerCase();
-
-        if (confirmation.equals("yes")) {
-            userWallet.deposit(amount);
-            System.out.println("Amount deposited successfully! New wallet balance: $" + userWallet.getBalance());
-        } else {
-            System.out.println("No amount added to the wallet.");
-        }
+        userWallet.deposit(amount);
+        System.out.println("Amount deposited successfully! New wallet balance: INR" + userWallet.getBalance());
     }
 }
 
-public class Main {
+public class camerarentalapplication {
     public static void main(String[] args) {
         RentalApplication rentalApp = new RentalApplication();
         Scanner scanner = new Scanner(System.in);
 
         // Adding sample cameras for demonstration
-        rentalApp.addCamera(new Camera(1, "Canon", "EOS R", 20.0));
-        rentalApp.addCamera(new Camera(2, "Nikon", "D850", 25.0));
-        rentalApp.addCamera(new Camera(3, "Sony", "A7 III", 30.0));
+        rentalApp.addCamera(new Camera(1, "Canon", "EOS R", 2000.0, "available"));
+        rentalApp.addCamera(new Camera(2, "Nikon", "D850", 2500.0, "available"));
+        rentalApp.addCamera(new Camera(3, "Sony", "A7 III", 3000.0, "available"));
+        rentalApp.addCamera(new Camera(4, "Lenova", "XPL", 3500, "available"));
+        rentalApp.addCamera(new Camera(5, "Nikon", "SRL",  3100.0, "available"));
+        rentalApp.addCamera(new Camera(6, "Sony", "A7 IID", 3400.0, "available"));
+        rentalApp.addCamera(new Camera(7, "Sony", "2130", 2400.0, "available"));
+        rentalApp.addCamera(new Camera(8, "Canon", "EOS H", 1600.0, "available"));
 
-        // ... Existing login code ...
+
+        boolean isLoggedIn = false;
+        String loginId = "";
+        String password = "";
+
+        // Define the login credentials
+        final String correctLoginId = "admin";
+        final String correctPassword = "password";
+
+        while (!isLoggedIn) {
+            System.out.println("WELCOME TO CAMERA RENTAL APP");
+            System.out.print("Enter login ID: ");
+            loginId = scanner.nextLine();
+            System.out.print("Enter password: ");
+            password = scanner.nextLine();
+
+            if (loginId.equals(correctLoginId) && password.equals(correctPassword)) {
+                isLoggedIn = true;
+                break;
+            }
+
+            System.out.println("Invalid login ID or password. Please try again.");
+        }
 
         // If logged in, display the menu
         if (isLoggedIn) {
             boolean isRunning = true;
             while (isRunning) {
                 System.out.println("\n===== RentMyCam.io =====");
-                System.out.println("1. Display Camera List");
+                System.out.println("1. My Camers");
                 System.out.println("2. Rent a Camera");
-                System.out.println("3. View Wallet Balance");
-                System.out.println("4. Deposit to Wallet");
-                System.out.println("5. View My Cameras");
-                System.out.println("6. Add Camera");
-                System.out.println("7. Remove Camera");
-                System.out.println("8. Exit");
+                System.out.println("3. My Wallet ");
+                System.out.println("4. View All Cameras");
+                System.out.println("5. Exit");
                 System.out.print("Enter your choice: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Consume the newline character
@@ -192,21 +206,7 @@ public class Main {
 
                 switch (choice) {
                     case 1:
-                        rentalApp.displayCameraList();
-                        break;
-                    case 2:
-                        System.out.print("Enter the camera ID to rent: ");
-                        int cameraId = scanner.nextInt();
-                        rentalApp.rentCamera(cameraId);
-                        scanner.nextLine(); // Consume the newline character
-                        break;
-                    case 3:
-                        rentalApp.displayWalletBalance();
-                        break;
-                    case 4:
-                        rentalApp.depositToWallet();
-                        break;
-                    case 5:
+                        
                         boolean isViewingCameras = true;
                         while (isViewingCameras) {
                             System.out.println("\n===== My Cameras =====");
@@ -231,10 +231,11 @@ public class Main {
                                     System.out.print("Enter the rental amount per day: ");
                                     double rentalAmount = scanner.nextDouble();
                                     scanner.nextLine(); // Consume the newline character
-                                    rentalApp.addUserCamera(new Camera(id, name, model, rentalAmount));
+                                    rentalApp.addUserCamera(new Camera(id, name, model, rentalAmount, name));
                                     System.out.println("Camera added successfully!");
                                     break;
                                 case 2:
+                                	rentalApp.displayCameraList();
                                     System.out.print("Enter the camera ID to remove: ");
                                     int removeCameraId = scanner.nextInt();
                                     scanner.nextLine(); // Consume the newline character
@@ -252,27 +253,22 @@ public class Main {
                             }
                         }
                         break;
-                    case 6:
-                        System.out.print("Enter the camera ID: ");
-                        int id = scanner.nextInt();
+                    case 2:
+                    	rentalApp.displayCameraList();
+                        System.out.print("Enter the camera ID to rent: ");
+                        int cameraId = scanner.nextInt();
+                        rentalApp.rentCamera(cameraId);
                         scanner.nextLine(); // Consume the newline character
-                        System.out.print("Enter the camera name: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Enter the camera model: ");
-                        String model = scanner.nextLine();
-                        System.out.print("Enter the rental amount per day: ");
-                        double rentalAmount = scanner.nextDouble();
-                        scanner.nextLine(); // Consume the newline character
-                        rentalApp.addUserCamera(new Camera(id, name, model, rentalAmount));
-                        System.out.println("Camera added successfully!");
                         break;
-                    case 7:
-                        System.out.print("Enter the camera ID to remove: ");
-                        int removeCameraId = scanner.nextInt();
-                        scanner.nextLine(); // Consume the newline character
-                        rentalApp.removeUserCamera(removeCameraId);
+                       
+                    case 3:
+                    	rentalApp.displayWalletBalance();
+                        rentalApp.depositToWallet();
                         break;
-                    case 8:
+                    case 4:
+                        rentalApp.displayUserCameraList();
+                        break;
+                    case 5:
                         isRunning = false;
                         System.out.println("Closing the application...");
                         break;
@@ -286,3 +282,4 @@ public class Main {
         scanner.close();
     }
 }
+
