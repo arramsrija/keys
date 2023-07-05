@@ -1,0 +1,30 @@
+package com.example.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class DashboardServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("loggedIn") != null) {
+            // User is logged in, show the dashboard page
+            response.setContentType("text/html");
+            response.getWriter().println("<html><head><title>Dashboard</title></head><body>");
+            response.getWriter().println("<h2>Welcome to the Dashboard!</h2>");
+            response.getWriter().println("<p>You are logged in.</p>");
+            response.getWriter().println("<a href=\"logout\">Logout</a>");
+            response.getWriter().println("</body></html>");
+        } else {
+            // User is not logged in, redirect to the login page
+            response.sendRedirect("login.html");
+        }
+    }
+}
